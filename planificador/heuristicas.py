@@ -13,7 +13,9 @@ Enfermero = str
 
 def seleccionar_siguiente_dia_turno(estado: "EstadoPlan") -> Optional[Tuple[Dia, Turno]]:
     """
-    Heuristica MRV: elige (dia, turno) con cupos pendientes y menos candidatos
+    Recorre todos los dias y todos los turnos para elegir mediante
+    heuristica MRV el par (dia, turno) con cupos pendientes y menos candidatos
+    segun las restricciones. Es decir, no comienza desde
     Si algun (dia, turno) tiene 0 candidatas, se retorna de inmediato para forzar retroceso
     
     Parametros:
@@ -24,21 +26,39 @@ def seleccionar_siguiente_dia_turno(estado: "EstadoPlan") -> Optional[Tuple[Dia,
     Optional[Tuple[Dia, Turno]]
         - (dia, turno) con el menor numero de candidatas segun MRV
         - None si ya no quedan cupos pendientes (exito)
-    """
+    
+    Ejemplo:
+    Suposiciones:
+    - Días = ["Lun", "Mar", "Jue"], Turnos = ["M", "T"]
+    - Enfermeros = ["Ana", "Luis", "Marta"]
+    - Cobertura = 1 por turno
+    - Disponibilidad:
+        Ana: Lun(M,T), Mar(M,T)
+        Luis: Lun(M), Jue(T)
+        Marta: Mar(M), Jue(T)
+    - Estado parcial:
+        Lun M → Ana
+        Lun T → Luis
+
+    Al evaluar:
+    - Mar M: candidatas = ["Ana", "Marta"] → 2
+    - Mar T: candidatas = ["Ana"] → 1
+    - Jue M: candidatas = [] → 0  ← se devuelve de inmediato (fail-first)
+    """    
     
     mejor: Optional[Tuple[Dia, Turno]] = None
     minimo: float = float("inf")
 
-    for d in estado.dias:
+    for d in estado.dias:  # Recorre todos los dias y turnos (d, t)
         for t in TURNOS:
             cupos: int = estado.cobertura[d][t] - len(estado.plan[d][t])
             if cupos <= 0:
                 continue
             
-            # Cuenta cuantas candidatas tiene este dia y turno
+            # Cuenta cuantas candidatas disponibles tiene este dia y turno
             candidatas = [e for e in estado.enfermeros if es_candidata(estado, e, d, t)]
             
-            # Fail-first: si no hay candidatas, devuelve este dia y turno de inmediato
+            # Fail-first: si no hay candidatas disponibles, devuelve este dia y turno de inmediato
             if len(candidatas) == 0:
                 return (d, t)
 
