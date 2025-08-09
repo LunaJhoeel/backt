@@ -35,7 +35,10 @@ class EstadoPlan:
         self.enfermeros: List[Enfermero] = list(enfermeros)
         self.cobertura: Cobertura = cobertura
         self.disponibilidad: Disponibilidad = disponibilidad
+        
         self.plan: Plan = {d: {t: [] for t in TURNOS} for d in self.dias}
+        
+        # Impide que una persona tome 2 turnos el mismo dia
         self.asignadas_por_dia: Dict[Dia, Set[Enfermero]] = {d: set() for d in self.dias}
 
         # Contadores por persona
@@ -43,8 +46,10 @@ class EstadoPlan:
         self.noches_por_enfermera: DefaultDict[Enfermero, int] = defaultdict(int)
         self.dias_trabajados_por_enfermera: DefaultDict[Enfermero, Set[Dia]] = defaultdict(set)
 
-        # Indices y dominios
+        # Permite ubicar el dia para verificar condicion manana despues de noche anterior
         self.indice_por_dia: Dict[Dia, int] = {d: i for i, d in enumerate(self.dias)}
+        
+        # Por enfermero y por dia, se crea un conjunto set con los turnos que puede hacer
         self.dominio_disponibilidad: Dict[Tuple[Enfermero, Dia], Set[Turno]] = {
             (e, d): {t for t in TURNOS if e in self.disponibilidad and (d, t) in self.disponibilidad[e]}
             for e in self.enfermeros
