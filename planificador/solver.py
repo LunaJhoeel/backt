@@ -75,10 +75,10 @@ class SolverBacktracking:
         self.ordenar_candidatas(candidatas)
 
         for e in candidatas:
-            self.asignar(e, dia_actual, turno_actual)
+            self.asignar(e, dia_actual, turno_actual)     # Toma la arista, entonces baja al hijo
             if self.resolver():
-                return True
+                return True                               
             self.estado.contador_retrocesos += 1
-            self.desasignar(e, dia_actual, turno_actual)
+            self.desasignar(e, dia_actual, turno_actual)  # Retroceso
 
         return False

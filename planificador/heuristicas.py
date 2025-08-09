@@ -24,12 +24,15 @@ def seleccionar_siguiente_dia_turno(estado: "EstadoPlan") -> Optional[Tuple[Dia,
             cupos: int = estado.cobertura[d][t] - len(estado.plan[d][t])
             if cupos <= 0:
                 continue
-
+            
+            # Cuenta cuantas candidatas tiene este dia y turno
             candidatas = [e for e in estado.enfermeros if es_candidata(estado, e, d, t)]
-
+            
+            # Fail-first: si no hay candidatas, devuelve este dia y turno de inmediato
             if len(candidatas) == 0:
                 return (d, t)
 
+            # MRV aplicado: se elige el (dia, turno) con la menor cantidad de candidatas
             if len(candidatas) < minimo:
                 minimo = len(candidatas)
                 mejor = (d, t)
