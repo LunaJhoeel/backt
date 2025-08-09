@@ -16,9 +16,9 @@ Respeta limites basicos: nadie hace dos turnos el mismo dia, evita manana despue
 proyecto/
 ├─ main.py
 └─ planificador/
-├─ init.py
-├─ constantes.py
-├─ estado.py
-├─ heuristicas.py
-├─ restricciones.py
-└─ solver.py
+├─── init.py
+├─── constantes.py
+├─── estado.py
+├─── heuristicas.py
+├─── restricciones.py
+└─── solver.py
