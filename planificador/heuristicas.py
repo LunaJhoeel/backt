@@ -15,7 +15,17 @@ def seleccionar_siguiente_dia_turno(estado: "EstadoPlan") -> Optional[Tuple[Dia,
     """
     Heuristica MRV: elige (dia, turno) con cupos pendientes y menos candidatos
     Si algun (dia, turno) tiene 0 candidatas, se retorna de inmediato para forzar retroceso
+    
+    Parametros:
+    estado : EstadoPlan
+        Estado con plan parcial, cobertura, disponibilidad, contadores e indices.
+
+    Retorna:
+    Optional[Tuple[Dia, Turno]]
+        - (dia, turno) con el menor numero de candidatas segun MRV
+        - None si ya no quedan cupos pendientes (exito)
     """
+    
     mejor: Optional[Tuple[Dia, Turno]] = None
     minimo: float = float("inf")
 
@@ -32,7 +42,7 @@ def seleccionar_siguiente_dia_turno(estado: "EstadoPlan") -> Optional[Tuple[Dia,
             if len(candidatas) == 0:
                 return (d, t)
 
-            # MRV aplicado: se elige el (dia, turno) con la menor cantidad de candidatas
+            # Elige el (dia, turno) con la menor cantidad de candidatas
             if len(candidatas) < minimo:
                 minimo = len(candidatas)
                 mejor = (d, t)
@@ -43,7 +53,23 @@ def seleccionar_siguiente_dia_turno(estado: "EstadoPlan") -> Optional[Tuple[Dia,
 def clave_candidata(estado: "EstadoPlan", enfermera: Enfermero) -> Tuple[int, int]:
     """
     Orden para candidatas: primero menos turnos totales, luego menos noches
+    
+    Parametros:
+    estado : EstadoPlan
+        Estado actual con contadores por persona
+    enfermera : str
+        Identificador de la persona candidata
+
+    Retorna:
+    Tuple[int, int]
+        Tupla (total_turnos, total_noches) para orden ascendente
+        donde valores menores se prueban antes
+
+    Ejemplo:
+    Si una enfermera tiene (3 turnos, 1 noche) y otra tiene (2 turnos, 0 noches),
+    la segunda enfermera se prioriza
     """
+    
     return (
         estado.total_turnos_por_enfermera[enfermera],
         estado.noches_por_enfermera[enfermera],
