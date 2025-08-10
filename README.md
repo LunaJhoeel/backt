@@ -12,6 +12,13 @@ Programa que arma horarios semanales segun:
 - Python 3.11 o superior
 - Sin librerias externas
 
+## Integrantes
+LUNA ACOSTUPA JHOEEL EDDYE 
+GUEVARA VARGAS VICTOR MANUEL
+NEIRA CHALAN JAVIER EDUARDO 
+SOTO CHAMBILLA ALONSO GABRIEL 
+VILCA PANTIGOSO KAROL BERLIZ
+
 ## Estructura del proyecto
 proyecto/
 ├─ main.py
