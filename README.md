@@ -1,6 +1,5 @@
 # Progamacion de turnos de enfermeria con Backtracking
 
-## Que es
 Programa que arma horarios semanales segun:
 - dias de trabajo (Lun a Vie)
 - cobertura por turno (M, T, N)
